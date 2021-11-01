@@ -22,7 +22,6 @@
 
 import sgtk
 import os
-import sys
 import tempfile
 from subprocess import check_output
 
@@ -80,9 +79,6 @@ class DeadlineReviewSubmissionHandler:
             ### Getting system data
             # Location of deadline installation
             deadline_path = os.getenv("DEADLINE_PATH")
-
-            # Current Python version, because of the different ways to create temp files
-            python_version = sys.version_info[0]
 
             ### Building all files
             # Building job info properties
