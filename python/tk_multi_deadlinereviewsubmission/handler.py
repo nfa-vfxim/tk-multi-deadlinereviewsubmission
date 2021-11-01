@@ -89,6 +89,7 @@ class DeadlineReviewSubmissionHandler:
             job_info = [
                 "Name=" + filename,
                 "Plugin=ShotGridReview",
+                "Department=ShotGrid",
                 "Priority=" + str(priority),
             ]
 
