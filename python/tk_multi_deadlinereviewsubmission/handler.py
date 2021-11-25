@@ -76,6 +76,9 @@ class DeadlineReviewSubmissionHandler:
             render_path = self.__app.get_template("review_output_path")
             render_path = render_path.apply_fields(fields)
 
+            if comment is None:
+                comment = " "
+
             ### Getting system data
             # Location of deadline installation
             deadline_path = os.getenv("DEADLINE_PATH")
@@ -106,6 +109,7 @@ class DeadlineReviewSubmissionHandler:
                 "CompanyName=" + company_name,
                 "ProjectName=" + project_name,
                 "Artist=" + user_name,
+                "Description=" + comment,
                 "ShotGridVersion=" + str(entity_version),
                 "FileName=" + filename,
             ]
