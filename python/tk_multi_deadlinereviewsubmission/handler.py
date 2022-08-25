@@ -193,6 +193,7 @@ class DeadlineReviewSubmissionHandler:
         plugin_info["ProjectID"] = project_id
         plugin_info["UserID"] = user_id
         plugin_info["EntityType"] = entity_type
+        plugin_info["EntityID"] = entity_id
         plugin_info["PublishID"] = publish_id
         plugin_info["TaskID"] = task_id
         plugin_info["SequenceFile"] = sequence_path
