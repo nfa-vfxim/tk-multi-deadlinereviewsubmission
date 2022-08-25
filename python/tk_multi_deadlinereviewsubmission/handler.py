@@ -44,6 +44,7 @@ class DeadlineReviewSubmissionHandler:
         end_frame,
         fps,
         filename,
+        colorspace,
         comment=None,
     ):
         """Get parameters from publisher, translate them to text and
@@ -108,6 +109,7 @@ class DeadlineReviewSubmissionHandler:
                 start_frame=start_frame,
                 end_frame=end_frame,
                 fps=fps,
+                colorspace=colorspace,
                 project_id=project_id,
                 user_id=user_id,
                 entity_type=entity_type,
@@ -137,6 +139,7 @@ class DeadlineReviewSubmissionHandler:
         start_frame,
         end_frame,
         fps,
+        colorspace,
         project_id,
         user_id,
         entity_type,
@@ -190,6 +193,7 @@ class DeadlineReviewSubmissionHandler:
         plugin_info["StartFrame"] = start_frame
         plugin_info["EndFrame"] = end_frame
         plugin_info["FPS"] = fps
+        plugin_info["Colorspace"] = colorspace
         plugin_info["ProjectID"] = project_id
         plugin_info["UserID"] = user_id
         plugin_info["EntityType"] = entity_type
