@@ -126,6 +126,8 @@ class DeadlineReviewSubmissionHandler:
             # Submit to Deadline
             self.__submit_to_deadline(submission_parameters)
 
+            return render_path
+
     def __get_submission_parameters(
         self,
         plugin,
