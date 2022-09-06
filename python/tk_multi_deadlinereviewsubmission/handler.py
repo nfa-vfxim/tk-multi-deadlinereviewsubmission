@@ -162,7 +162,7 @@ class DeadlineReviewSubmissionHandler:
         plugin_info["PublishID"] = publish_id
         plugin_info["FirstFrame"] = first_frame
         plugin_info["LastFrame"] = last_frame
-        plugin_info["SequenceFile"] = sequence_path
+        plugin_info["SequencePath"] = sequence_path
         plugin_info["SlatePath"] = slate_path
         plugin_info["FPS"] = fps
         plugin_info["Company"] = company
