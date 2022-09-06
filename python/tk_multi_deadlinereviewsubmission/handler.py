@@ -40,12 +40,11 @@ class DeadlineReviewSubmissionHandler:
         template,
         fields,
         sg_publishes,
-        start_frame,
-        end_frame,
+        first_frame,
+        last_frame,
         fps,
-        filename,
-        colorspace,
-        comment=None,
+        colorspace_idt,
+        colorspace_odt,
     ):
         """Get parameters from publisher, translate them to text and
         submit using deadline command
@@ -67,34 +66,15 @@ class DeadlineReviewSubmissionHandler:
 
         for publish in sg_publishes:
 
-            # Getting current project id and project name
-            project_id = publish.get("project").get("id")
-            project_name = publish.get("project").get("name")
-
-            # Getting entity data
-            entity_version = publish.get("version_number")
-            entity_id = publish.get("entity").get("id")
-            entity_type = publish.get("entity").get("type")
-
-            # Getting task id
-            task_id = publish.get("task").get("id")
-
-            # Getting info about the submitter
-            user_name = publish.get("created_by").get("name")
-            user_id = publish.get("created_by").get("id")
-
             # Getting publish id
             publish_id = publish.get("id")
 
             # Getting settings from the app configuration
             priority = self.__app.get_setting("default_priority")
-            company_name = self.__app.get_setting("company_name")
+            company = self.__app.get_setting("company_name")
 
-            render_path = self.__app.get_template("review_output_path")
-            render_path = render_path.apply_fields(fields)
-
-            if comment is None:
-                comment = " "
+            slate_path = self.__app.get_template("review_output_path")
+            slate_path = slate_path.apply_fields(fields)
 
             department = "ShotGrid"
             plugin = "ShotGridReview"
@@ -105,54 +85,36 @@ class DeadlineReviewSubmissionHandler:
                 plugin=plugin,
                 priority=priority,
                 department=department,
-                filename=filename,
-                start_frame=start_frame,
-                end_frame=end_frame,
-                fps=fps,
-                colorspace=colorspace,
-                project_id=project_id,
-                user_id=user_id,
-                entity_type=entity_type,
-                entity_id=entity_id,
                 publish_id=publish_id,
-                task_id=task_id,
+                first_frame=first_frame,
+                last_frame=last_frame,
+                fps=fps,
                 sequence_path=sequence_path,
-                render_path=render_path,
-                company_name=company_name,
-                project_name=project_name,
-                user_name=user_name,
-                comment=comment,
-                entity_version=entity_version,
+                slate_path=slate_path,
+                company=company,
+                colorspace_idt=colorspace_idt,
+                colorspace_odt=colorspace_odt,
             )
 
             # Submit to Deadline
             self.__submit_to_deadline(submission_parameters)
 
-            return render_path
+            return slate_path
 
     def __get_submission_parameters(
         self,
         plugin,
         priority,
         department,
-        filename,
-        start_frame,
-        end_frame,
-        fps,
-        colorspace,
-        project_id,
-        user_id,
-        entity_type,
-        entity_id,
         publish_id,
-        task_id,
+        first_frame,
+        last_frame,
+        fps,
+        slate_path,
         sequence_path,
-        render_path,
-        company_name,
-        project_name,
-        user_name,
-        comment,
-        entity_version,
+        company,
+        colorspace_idt,
+        colorspace_odt,
     ):
         """
         Create dictionaries containing all submission parameters
@@ -182,32 +144,30 @@ class DeadlineReviewSubmissionHandler:
         job_info = {}
         job_info["Plugin"] = plugin
         job_info["Priority"] = priority
-        job_info["Name"] = filename
+
+        # Set submission name
+        slate_name = os.path.basename(slate_path)
+        job_info["Name"] = slate_name
+
         job_info["Department"] = department
-        job_info["OutputDirectory0"] = os.path.dirname(render_path)
-        job_info["OutputFilename0"] = os.path.basename(render_path)
+
+        # Set slate directories for Deadline job browser
+        slate_directory = os.path.dirname(slate_path)
+        job_info["OutputDirectory0"] = slate_directory
+        job_info["OutputFilename0"] = slate_name
 
         # Getting plugin submission parameters
         plugin_info = {}
         plugin_info["Version"] = 1
-        plugin_info["StartFrame"] = start_frame
-        plugin_info["EndFrame"] = end_frame
-        plugin_info["FPS"] = fps
-        plugin_info["Colorspace"] = colorspace
-        plugin_info["ProjectID"] = project_id
-        plugin_info["UserID"] = user_id
-        plugin_info["EntityType"] = entity_type
-        plugin_info["EntityID"] = entity_id
         plugin_info["PublishID"] = publish_id
-        plugin_info["TaskID"] = task_id
+        plugin_info["FirstFrame"] = first_frame
+        plugin_info["LastFrame"] = last_frame
         plugin_info["SequenceFile"] = sequence_path
-        plugin_info["OutputFile"] = render_path
-        plugin_info["CompanyName"] = company_name
-        plugin_info["ProjectName"] = project_name
-        plugin_info["Artist"] = user_name
-        plugin_info["Description"] = comment
-        plugin_info["ShotGridVersion"] = entity_version
-        plugin_info["FileName"] = filename
+        plugin_info["SlatePath"] = slate_path
+        plugin_info["FPS"] = fps
+        plugin_info["Company"] = company
+        plugin_info["ColorspaceIDT"] = colorspace_idt
+        plugin_info["ColorspaceODT"] = colorspace_odt
 
         # Create dictionary containing both dictionaries
         submission_files = {
