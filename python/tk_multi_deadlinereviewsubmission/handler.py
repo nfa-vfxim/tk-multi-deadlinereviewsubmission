@@ -39,7 +39,7 @@ class DeadlineReviewSubmissionHandler:
         self,
         template,
         fields,
-        sg_publishes,
+        publish,
         first_frame,
         last_frame,
         fps,
@@ -64,42 +64,46 @@ class DeadlineReviewSubmissionHandler:
         fields["SEQ"] = "FORMAT: %d"
         sequence_path = template.apply_fields(fields)
 
-        for publish in sg_publishes:
+        # Getting publish id
+        publish_id = publish.get("id")
 
-            # Getting publish id
-            publish_id = publish.get("id")
+        # Getting settings from the app configuration
+        priority = self.__app.get_setting("default_priority")
+        company = self.__app.get_setting("company_name")
 
-            # Getting settings from the app configuration
-            priority = self.__app.get_setting("default_priority")
-            company = self.__app.get_setting("company_name")
+        slate_path = self.__app.get_template("review_output_path")
+        slate_path = slate_path.apply_fields(fields)
 
-            slate_path = self.__app.get_template("review_output_path")
-            slate_path = slate_path.apply_fields(fields)
+        if colorspace_idt is None:
+            colorspace_idt = self.__app.get_setting("default_colorspace_idt")
 
-            department = "ShotGrid"
-            plugin = "ShotGridReview"
+        if colorspace_odt is None:
+            colorspace_odt = self.__app.get_setting("default_colorspace_odt")
 
-            # Every argument has to be split because we are
-            # sending it via deadlinecommand
-            submission_parameters = self.__get_submission_parameters(
-                plugin=plugin,
-                priority=priority,
-                department=department,
-                publish_id=publish_id,
-                first_frame=first_frame,
-                last_frame=last_frame,
-                fps=fps,
-                sequence_path=sequence_path,
-                slate_path=slate_path,
-                company=company,
-                colorspace_idt=colorspace_idt,
-                colorspace_odt=colorspace_odt,
-            )
+        department = "Pipeline"
+        plugin = "ShotGridReview"
 
-            # Submit to Deadline
-            self.__submit_to_deadline(submission_parameters)
+        # Every argument has to be split because we are
+        # sending it via deadlinecommand
+        submission_parameters = self.__get_submission_parameters(
+            plugin=plugin,
+            priority=priority,
+            department=department,
+            publish_id=publish_id,
+            first_frame=first_frame,
+            last_frame=last_frame,
+            fps=fps,
+            sequence_path=sequence_path,
+            slate_path=slate_path,
+            company=company,
+            colorspace_idt=colorspace_idt,
+            colorspace_odt=colorspace_odt,
+        )
 
-            return slate_path
+        # Submit to Deadline
+        self.__submit_to_deadline(submission_parameters)
+
+        return slate_path
 
     def __get_submission_parameters(
         self,

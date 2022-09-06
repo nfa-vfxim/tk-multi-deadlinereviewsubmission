@@ -34,30 +34,34 @@ class TkDeadlineReviewSubmissionApp(sgtk.platform.Application):
         """
         Called as the application is being initialized
         """
-        self.tk_multi_deadlinereviewsubmission = self.import_module("tk_multi_deadlinereviewsubmission")
-        self.handler = self.tk_multi_deadlinereviewsubmission.DeadlineReviewSubmissionHandler()
+        self.tk_multi_deadlinereviewsubmission = self.import_module(
+            "tk_multi_deadlinereviewsubmission"
+        )
+        self.handler = (
+            self.tk_multi_deadlinereviewsubmission.DeadlineReviewSubmissionHandler()
+        )
 
     def submit_version(
         self,
-        template=None,
-        fields=None,
-        sg_publishes=None,
-        start_frame=None,
-        end_frame=None,
-        fps=None,
-        filename=None,
-        comment=None
+        template,
+        fields,
+        publish,
+        first_frame,
+        last_frame,
+        fps,
+        colorspace_idt=None,
+        colorspace_odt=None,
     ):
 
         result = self.handler.submit_to_deadline(
-            template,
-            fields,
-            sg_publishes,
-            start_frame,
-            end_frame,
-            fps,
-            filename,
-            comment
+            template=template,
+            fields=fields,
+            publish=publish,
+            first_frame=first_frame,
+            last_frame=last_frame,
+            fps=fps,
+            colorspace_idt=colorspace_idt,
+            colorspace_odt=colorspace_odt,
         )
 
         return result
