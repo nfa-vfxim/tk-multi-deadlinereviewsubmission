@@ -37,8 +37,20 @@ configuration:
   company_name:
     allows_empty: True
     type: str
-    default_value: "NFA"
+    default_value: "Nederlandse Filmacademie"
     description: "The company name to add to the submission to use in the slate via the Deadline ShotGridReview plugin."
+
+  default_colorspace_idt:
+    allows_empty: True
+    type: str
+    default_value: "ACES - ACEScg"
+    description: "Default colorspace to use as idt when submitting the job to Deadline."
+
+  default_colorspace_odt:
+    allows_empty: True
+    type: str
+    default_value: "Output - sRGB"
+    description: "Default colorspace to use as odt when submitting the job to Deadline."
 
 
 # this tk_multi_deadlinereviewsubmission works in all engines - it does not contain
