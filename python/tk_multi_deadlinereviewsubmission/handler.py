@@ -148,6 +148,7 @@ class DeadlineReviewSubmissionHandler:
         job_info = {}
         job_info["Plugin"] = plugin
         job_info["Priority"] = priority
+        job_info["OnJobComplete"] = "Delete"
 
         # Set submission name
         slate_name = os.path.basename(slate_path)
